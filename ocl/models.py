@@ -30,3 +30,16 @@ class Almacen(models.Model):
         return str(self.largo)
 
 
+class Formato(models.Model):
+
+    formato = models.IntegerField()
+    perdida = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'Formato'
+        verbose_name_plural = 'Formatos'
+
+    def __str__(self):
+        return str(self.formato)
+
+
