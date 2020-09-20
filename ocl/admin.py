@@ -32,7 +32,7 @@ def calcular_corte(modeladmin, request, queryset):
                 break
             disponibilidad = lista.cantidad
             if disponibilidad > 0:
-                division = objeto_formato.formato / largo
+                division = limite / largo
                 division = math.floor(division)
                 if division >= disponibilidad:
                     for i in range(disponibilidad):
