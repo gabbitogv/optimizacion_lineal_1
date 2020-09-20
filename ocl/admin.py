@@ -10,6 +10,7 @@ def calcular_corte(modeladmin, request, queryset):
     query = queryset.order_by('-largo')
     listado_ordenado = list(query)
     sumatoria = 0
+    x = 0
 
     #Calculo de los cortes
     for lista in listado_ordenado:
@@ -19,16 +20,19 @@ def calcular_corte(modeladmin, request, queryset):
     division = sumatoria / objeto_formato.formato
     valor_ideal = math.ceil(division)
     listado_corte = []
+    largo_listado_ordenado = len(listado_ordenado)
 
     for i in range(valor_ideal):
 
         lista_corte = []
         limite = objeto_formato.formato
 
-        for lista in listado_ordenado:
+        for x in range(largo_listado_ordenado):
+            lista = listado_ordenado[x]
             largo = lista.largo + objeto_formato.perdida
             if largo > limite:
                 listado_corte.append(lista_corte)
+                x = x+1
                 break
             disponibilidad = lista.cantidad
             if disponibilidad > 0:
@@ -38,13 +42,14 @@ def calcular_corte(modeladmin, request, queryset):
                     for i in range(disponibilidad):
                         lista_corte.append(largo)
                     lista.cantidad = 0
+                    limite = limite - disponibilidad * largo
 
                 elif division < disponibilidad:
                     diferencia = disponibilidad - division
                     for i in range(division):
                         lista_corte.append(largo)
                     lista.cantidad = diferencia
-                limite = limite - disponibilidad * largo
+                    limite = limite - division * largo
 
 
 calcular_corte.short_description = 'Calculo de Corte'
