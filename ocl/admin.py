@@ -2,6 +2,10 @@ from django.contrib import admin
 from ocl.models import Almacen, Tipo, Formato
 from import_export.admin import ImportExportModelAdmin
 import math
+from weasyprint import HTML
+from django.http import HttpResponse
+from django.core.files.storage import FileSystemStorage
+from django.template.loader import render_to_string
 
 
 def calcular_corte(modeladmin, request, queryset):
@@ -58,8 +62,15 @@ def calcular_corte(modeladmin, request, queryset):
                 break
 
             indice = indice+1
-    a = 2
-    pass
+
+    html_string = render_to_string('templates/ficha.html', {'valor_ideal': valor_ideal, 'lista': listado_corte})
+    html = HTML(string=html_string, base_url=request.build_absolute_uri())
+    html.write_pdf(target='/home/cerbeerza/Documentos/ficha.pdf')
+    fs = FileSystemStorage('/home/cerbeerza/Documentos')
+    with fs.open('ficha.pdf') as pdf:
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="ficha.pdf"'
+        return response
 
 
 calcular_corte.short_description = 'Calculo de Corte'
