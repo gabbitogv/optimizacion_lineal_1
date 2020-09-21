@@ -26,13 +26,16 @@ def calcular_corte(modeladmin, request, queryset):
 
         lista_corte = []
         limite = objeto_formato.formato
+        corte = True
+        indice = 0
 
-        for x in range(largo_listado_ordenado):
-            lista = listado_ordenado[x]
+        #Ciclo de disponibilidad de material para tiras
+        # Ciclo de llenado de tiras
+        for lista in listado_ordenado:
+
             largo = lista.largo + objeto_formato.perdida
-            if largo > limite:
+            if largo > limite and lista.cantidad > 0:
                 listado_corte.append(lista_corte)
-                x = x+1
                 break
             disponibilidad = lista.cantidad
             if disponibilidad > 0:
@@ -50,6 +53,13 @@ def calcular_corte(modeladmin, request, queryset):
                         lista_corte.append(largo)
                     lista.cantidad = diferencia
                     limite = limite - division * largo
+            if indice == len(listado_ordenado)-1:
+                listado_corte.append(lista_corte)
+                break
+
+            indice = indice+1
+    a = 2
+    pass
 
 
 calcular_corte.short_description = 'Calculo de Corte'
